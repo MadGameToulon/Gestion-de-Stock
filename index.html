@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Stock - Scanner</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Application de gestion de stock avec scanner">
+    <meta name="theme-color" content="#3498db">
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkdlc3Rpb24gZGUgU3RvY2siLAogICJzaG9ydF9uYW1lIjogIlN0b2NrIE1hbmFnZXIiLAogICJkZXNjcmlwdGlvbiI6ICJBcHBsaWNhdGlvbiBkZSBnZXN0aW9uIGRlIHN0b2NrIGF2ZWMgc2Nhbm5lciIsCiAgInN0YXJ0X3VybCI6ICIvIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIiwKICAidGhlbWVfY29sb3IiOiAiIzM0OThkYiIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU1UazJJaUJvWldsbmFIUTlJakkxTmlJZ1ptbHNiRDBpSXpNME9UaGtZaUlnZUcxc2JuTTlJbWgwZEhBNkx5OTNkM2N1ZHpNdWIzSm5Mekl3TURBdmMzWm5JaUErUEhKbFkzUWdkMmxrZEdnOUlqRTVOaUlnYUdWcFoyaDBQU0l5TlRZaUlISjRQU0l4TWlJZ1ptbHNiRDBpSXpNME9UaGtZaUl2UGp4MFpYaDBJSGc5SWpVNElpQjVQU0l4TWpnaUlHWnBiR3c5SWlObVptWm1abVlpSUdadmJuUXRjMmw2WlQwaWFXNWpaWEpwZENJZ1ptOXVkQzEzWldsbmFIUTlJbUp2YkdRaUlIUmxlSFF0WVc1amFHOXlQU0p0YVdSa2JHVWlQako0UEM5MFpYaDBQand2YzNabkBUIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfSwKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlOVEV5SWlCb1pXbG5hSFE5SWpVeE1pSWdabWxzYkQwaUl6TTBPVGRFUW1ZaUlIaHRiRzV6UFNKb2RIUndPaTh2ZDNkM0xuY3pMbTl5Wnk4eU1EQXdMM04yWnlJK1BISXRkWFJwWTNnZ2QybGtkR2c5SWpRNE1pSWdhR1ZwWjJoMFBTSTVOalFpSUhKNFBTSXhOaUlnWm1sc2JEMGlJek0wT1RoRVFtWWlMejQ4ZEdWNGRDQjRQU0l5TlRZaUlIazlJbVUwTmpZaUlHWnBiR3c5SWlObVptWm1abVlpSUdadmJuUXRjMmw2WlQwaWFXNWpaWEpwZENJZ1ptOXVkQzEzWldsbmFIUTlJbUp2YkdRaUlIUmxlSFF0WVc1amFHOXlQU0p0YVdSa2JHVWlQano0UEM5MFpYaDBQand2YzNabkJUIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ=="&gt;
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTk2IiBoZWlnaHQ9IjE5NiIgZmlsbD0iIzM0OThkYiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTk2IiBoZWlnaHQ9IjE5NiIgcng9IjEyIiBmaWxsPSIjMzQ5OGRiIi8+PHRleHQgeD0iOTgiIHk9IjEyOCIgZmlsbD0iI2ZmZmZmZiIgZm9udC1zaXplPSJpbmhlcml0IiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+TpjwvdGV4dD48L3N2Zz4="&gt;
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .scanner-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .scanner-controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+
+        .barcode-input {
+            padding: 15px;
+            border: 3px solid #3498db;
+            border-radius: 10px;
+            font-size: 1.2em;
+            min-width: 300px;
+            transition: all 0.3s ease;
+        }
+
+        .barcode-input:focus {
+            outline: none;
+            border-color: #2980b9;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+            transform: scale(1.02);
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 150px;
+        }
+
+        .btn-in {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+        }
+
+        .btn-in:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-out {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .btn-out:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-search {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(243, 156, 18, 0.3);
+        }
+
+        .product-form {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            display: none;
+        }
+
+        .status.success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .status.warning {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            color: #856404;
+            border: 2px solid #ffeaa7;
+        }
+
+        .inventory-section {
+            background: linear-gradient(135deg, #f1f2f6 0%, #ddd6fe 100%);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .inventory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .inventory-header h2 {
+            color: #2c3e50;
+            font-size: 1.8em;
+        }
+
+        .search-box {
+            padding: 10px 15px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 1em;
+            min-width: 250px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .inventory-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 1fr 1fr 100px;
+            gap: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .table-row {
+            padding: 15px 20px;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 1fr 1fr 100px;
+            gap: 15px;
+            border-bottom: 1px solid #ecf0f1;
+            transition: background-color 0.3s ease;
+            align-items: center;
+        }
+
+        .table-row:hover {
+            background-color: #f8f9fa;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .stock-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .stock-in {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .stock-out {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .stock-low {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .scanner-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .barcode-input {
+                min-width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .table-header, .table-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .table-header {
+                display: none;
+            }
+
+            .table-row {
+                padding: 20px;
+                border: 1px solid #ecf0f1;
+                border-radius: 10px;
+                margin-bottom: 10px;
+            }
+
+            .inventory-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📦 Gestion de Stock</h1>
+            <p>Scanner pour gérer votre inventaire</p>
+        </div>
+
+        <div class="main-content">
+            <div class="scanner-section">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #2c3e50; font-size: 1.8em;">Scanner de Code-Barres</h2>
+                
+                <div class="scanner-controls">
+                    <div class="input-group">
+                        <label for="barcodeInput">Code-Barres / Référence:</label>
+                        <input type="text" id="barcodeInput" class="barcode-input" placeholder="Scannez ou tapez le code-barres..." autofocus>
+                    </div>
+                </div>
+
+                <div class="scanner-controls">
+                    <button class="btn btn-in" onclick="addToStock()">
+                        ✅ Entrée Stock
+                    </button>
+                    <button class="btn btn-out" onclick="removeFromStock()">
+                        ❌ Sortie Stock
+                    </button>
+                    <button class="btn btn-search" onclick="searchProduct()">
+                        🔍 Rechercher
+                    </button>
+                </div>
+
+                <div id="productForm" class="product-form">
+                    <h3 style="margin-bottom: 20px; color: #2c3e50;">Nouveau Produit</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productName">Nom du produit:</label>
+                            <input type="text" id="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategory">Catégorie:</label>
+                            <input type="text" id="productCategory">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productPrice">Prix (€):</label>
+                            <input type="number" id="productPrice" step="0.01" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="productQuantity">Quantité initiale:</label>
+                            <input type="number" id="productQuantity" min="1" value="1">
+                        </div>
+                    </div>
+                    <button class="btn btn-in" onclick="saveNewProduct()" style="margin-top: 15px;">
+                        💾 Enregistrer le produit
+                    </button>
+                </div>
+
+                <div id="statusMessage" class="status"></div>
+            </div>
+
+            <div class="inventory-section">
+                <div class="inventory-header">
+                    <h2>📊 Inventaire</h2>
+                    <input type="text" id="searchBox" class="search-box" placeholder="Rechercher un produit..." oninput="filterProducts()">
+                </div>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <div id="totalProducts" class="stat-number">0</div>
+                        <div class="stat-label">Produits</div>
+                    </div>
+                    <div class="stat-card">
+                        <div id="totalStock" class="stat-number">0</div>
+                        <div class="stat-label">Unités en Stock</div>
+                    </div>
+                    <div class="stat-card">
+                        <div id="totalValue" class="stat-number">0€</div>
+                        <div class="stat-label">Valeur du Stock</div>
+                    </div>
+                    <div class="stat-card">
+                        <div id="lowStockCount" class="stat-number">0</div>
+                        <div class="stat-label">Stock Faible</div>
+                    </div>
+                </div>
+
+                <div class="inventory-table">
+                    <div class="table-header">
+                        <div>Code-Barres</div>
+                        <div>Produit</div>
+                        <div>Catégorie</div>
+                        <div>Prix</div>
+                        <div>Stock</div>
+                        <div>Actions</div>
+                    </div>
+                    <div id="inventoryList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Stockage des produits (en mémoire)
+        let inventory = {};
+
+        // Données d'exemple
+        const sampleProducts = {
+            '1234567890123': {
+                name: 'Ordinateur Portable Dell',
+                category: 'Informatique',
+                price: 899.99,
+                quantity: 5,
+                lastUpdated: new Date().toISOString()
+            },
+            '2345678901234': {
+                name: 'Souris Logitech',
+                category: 'Périphérique',
+                price: 29.99,
+                quantity: 15,
+                lastUpdated: new Date().toISOString()
+            },
+            '3456789012345': {
+                name: 'Clavier Mécanique',
+                category: 'Périphérique',
+                price: 89.99,
+                quantity: 2,
+                lastUpdated: new Date().toISOString()
+            }
+        };
+
+        // Charger les données d'exemple au démarrage
+        inventory = {...sampleProducts};
+
+        // Gestion des événements clavier
+        document.getElementById('barcodeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchProduct();
+            }
+        });
+
+        function showStatus(message, type = 'success') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+            statusEl.style.display = 'block';
+            
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 3000);
+        }
+
+        function addToStock() {
+            const barcode = document.getElementById('barcodeInput').value.trim();
+            
+            if (!barcode) {
+                showStatus('Veuillez scanner ou saisir un code-barres', 'error');
+                return;
+            }
+
+            if (inventory[barcode]) {
+                inventory[barcode].quantity += 1;
+                inventory[barcode].lastUpdated = new Date().toISOString();
+                showStatus(`✅ +1 unité ajoutée à "${inventory[barcode].name}". Stock: ${inventory[barcode].quantity}`, 'success');
+            } else {
+                showNewProductForm(barcode);
+                return;
+            }
+
+            clearInput();
+            updateDisplay();
+        }
+
+        function removeFromStock() {
+            const barcode = document.getElementById('barcodeInput').value.trim();
+            
+            if (!barcode) {
+                showStatus('Veuillez scanner ou saisir un code-barres', 'error');
+                return;
+            }
+
+            if (inventory[barcode]) {
+                if (inventory[barcode].quantity > 0) {
+                    inventory[barcode].quantity -= 1;
+                    inventory[barcode].lastUpdated = new Date().toISOString();
+                    showStatus(`❌ -1 unité retirée de "${inventory[barcode].name}". Stock: ${inventory[barcode].quantity}`, 'warning');
+                } else {
+                    showStatus(`Stock déjà à 0 pour "${inventory[barcode].name}"`, 'error');
+                }
+            } else {
+                showStatus('Produit non trouvé dans l\'inventaire', 'error');
+            }
+
+            clearInput();
+            updateDisplay();
+        }
+
+        function searchProduct() {
+            const barcode = document.getElementById('barcodeInput').value.trim();
+            
+            if (!barcode) {
+                showStatus('Veuillez scanner ou saisir un code-barres', 'error');
+                return;
+            }
+
+            if (inventory[barcode]) {
+                const product = inventory[barcode];
+                let stockStatus = '';
+                if (product.quantity === 0) {
+                    stockStatus = '❌ Rupture de stock';
+                } else if (product.quantity < 5) {
+                    stockStatus = '⚠️ Stock faible';
+                } else {
+                    stockStatus = '✅ En stock';
+                }
+                
+                showStatus(`🔍 ${product.name} - ${stockStatus} (${product.quantity} unités)`, 'success');
+            } else {
+                showStatus('Produit non trouvé. Cliquez sur "Entrée Stock" pour l\'ajouter.', 'warning');
+            }
+        }
+
+        function showNewProductForm(barcode) {
+            const form = document.getElementById('productForm');
+            form.style.display = 'block';
+            form.scrollIntoView({ behavior: 'smooth' });
+            
+            // Stocker le code-barres pour l'utiliser lors de la sauvegarde
+            document.getElementById('productForm').dataset.barcode = barcode;
+            
+            showStatus('Nouveau produit détecté. Veuillez remplir les informations.', 'warning');
+        }
+
+        function saveNewProduct() {
+            const barcode = document.getElementById('productForm').dataset.barcode;
+            const name = document.getElementById('productName').value.trim();
+            const category = document.getElementById('productCategory').value.trim();
+            const price = parseFloat(document.getElementById('productPrice').value) || 0;
+            const quantity = parseInt(document.getElementById('productQuantity').value) || 1;
+
+            if (!name) {
+                showStatus('Le nom du produit est requis', 'error');
+                return;
+            }
+
+            inventory[barcode] = {
+                name: name,
+                category: category || 'Non catégorisé',
+                price: price,
+                quantity: quantity,
+                lastUpdated: new Date().toISOString()
+            };
+
+            // Réinitialiser le formulaire
+            document.getElementById('productForm').style.display = 'none';
+            document.getElementById('productName').value = '';
+            document.getElementById('productCategory').value = '';
+            document.getElementById('productPrice').value = '';
+            document.getElementById('productQuantity').value = '1';
+
+            showStatus(`✅ Produit "${name}" ajouté avec succès! Stock: ${quantity}`, 'success');
+            clearInput();
+            updateDisplay();
+        }
+
+        function deleteProduct(barcode) {
+            if (confirm(`Êtes-vous sûr de vouloir supprimer "${inventory[barcode].name}" ?`)) {
+                const productName = inventory[barcode].name;
+                delete inventory[barcode];
+                showStatus(`🗑️ Produit "${productName}" supprimé`, 'warning');
+                updateDisplay();
+            }
+        }
+
+        function clearInput() {
+            document.getElementById('barcodeInput').value = '';
+            document.getElementById('barcodeInput').focus();
+        }
+
+        function updateDisplay() {
+            updateStats();
+            updateInventoryTable();
+        }
+
+        function updateStats() {
+            const products = Object.keys(inventory);
+            const totalProducts = products.length;
+            const totalStock = products.reduce((sum, barcode) => sum + inventory[barcode].quantity, 0);
+            const totalValue = products.reduce((sum, barcode) => {
+                return sum + (inventory[barcode].price * inventory[barcode].quantity);
+            }, 0);
+            const lowStockCount = products.filter(barcode => inventory[barcode].quantity < 5).length;
+
+            document.getElementById('totalProducts').textContent = totalProducts;
+            document.getElementById('totalStock').textContent = totalStock;
+            document.getElementById('totalValue').textContent = totalValue.toFixed(2) + '€';
+            document.getElementById('lowStockCount').textContent = lowStockCount;
+        }
+
+        function updateInventoryTable() {
+            const inventoryList = document.getElementById('inventoryList');
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            
+            const filteredProducts = Object.keys(inventory).filter(barcode => {
+                const product = inventory[barcode];
+                return product.name.toLowerCase().includes(searchTerm) ||
+                       product.category.toLowerCase().includes(searchTerm) ||
+                       barcode.includes(searchTerm);
+            });
+
+            if (filteredProducts.length === 0) {
+                inventoryList.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Aucun produit trouvé</h3>
+                        <p>Scannez un code-barres pour ajouter des produits à votre inventaire</p>
+                    </div>
+                `;
+                return;
+            }
+
+            inventoryList.innerHTML = filteredProducts.map(barcode => {
+                const product = inventory[barcode];
+                let stockClass = 'stock-in';
+                let stockText = 'En stock';
+                
+                if (product.quantity === 0) {
+                    stockClass = 'stock-out';
+                    stockText = 'Rupture';
+                } else if (product.quantity < 5) {
+                    stockClass = 'stock-low';
+                    stockText = 'Stock faible';
+                }
+
+                return `
+                    <div class="table-row">
+                        <div style="font-family: monospace; font-weight: bold;">${barcode}</div>
+                        <div style="font-weight: bold;">${product.name}</div>
+                        <div>${product.category}</div>
+                        <div>${product.price.toFixed(2)}€</div>
+                        <div>
+                            <span class="stock-badge ${stockClass}">
+                                ${product.quantity} - ${stockText}
+                            </span>
+                        </div>
+                        <div>
+                            <button class="delete-btn" onclick="deleteProduct('${barcode}')">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterProducts() {
+            updateInventoryTable();
+        }
+
+        // Service Worker pour PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:application/javascript;base64,Ly8gU2VydmljZSBXb3JrZXIgcG91ciBQV0EKY29uc3QgQ0FDSEVfTkFNRSA9ICdzdG9jay1hcHAtdjEnOwpjb25zdCB1cmxzVG9DYWNoZSA9IFsnLyddOwoKc2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZXZlbnQgPT4gewogIGV2ZW50LndhaXRVbnRpbCgKICAgIGNhY2hlcy5vcGVuKENBQ0hFX05BTUUpCiAgICAgIC50aGVuKGNhY2hlID0+IGNhY2hlLmFkZEFsbCh1cmxzVG9DYWNoZSkpCiAgKTsKfSk7CgpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2ZldGNoJywgZXZlbnQgPT4gewogIGV2ZW50LnJlc3BvbmRXaXRoKAogICAgY2FjaGVzLm1hdGNoKGV2ZW50LnJlcXVlc3QpCiAgICAgIC50aGVuKHJlc3BvbnNlID0+IHJlc3BvbnNlIHx8IGZldGNoKGV2ZW50LnJlcXVlc3QpKQogICk7Cn0pOw==').then(() => {
+                console.log('PWA Service Worker registered');
+            }).catch(err => {
+                console.log('PWA Service Worker registration failed');
+            });
+        }
+
+        // Bouton d'installation PWA
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallButton();
+        });
+
+        function showInstallButton() {
+            const installButton = document.createElement('button');
+            installButton.textContent = '📱 Installer l\'app';
+            installButton.className = 'btn btn-search';
+            installButton.style.position = 'fixed';
+            installButton.style.bottom = '20px';
+            installButton.style.right = '20px';
+            installButton.style.zIndex = '1000';
+            installButton.onclick = installApp;
+            document.body.appendChild(installButton);
+        }
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
+        // Initialisation
+        updateDisplay();
+    </script>
+</body>
+</html>
